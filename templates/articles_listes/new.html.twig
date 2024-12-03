@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New ArticlesListes{% endblock %}
+
+{% block body %}
+    <h1>Create new ArticlesListes</h1>
+
+    {{ include('articles_listes/_form.html.twig') }}
+
+    <a href="{{ path('app_articles_listes_index') }}">back to list</a>
+{% endblock %}

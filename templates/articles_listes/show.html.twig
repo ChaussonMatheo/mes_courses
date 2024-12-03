@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ArticlesListes{% endblock %}
+
+{% block body %}
+    <h1>ArticlesListes</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ articles_liste.id }}</td>
+            </tr>
+            <tr>
+                <th>Quantite</th>
+                <td>{{ articles_liste.quantite }}</td>
+            </tr>
+            <tr>
+                <th>IsInList</th>
+                <td>{{ articles_liste.IsInList ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_articles_listes_index') }}">back to list</a>
+
+    <a href="{{ path('app_articles_listes_edit', {'id': articles_liste.id}) }}">edit</a>
+
+    {{ include('articles_listes/_delete_form.html.twig') }}
+{% endblock %}
