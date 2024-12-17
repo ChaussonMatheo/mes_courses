@@ -1,13 +1,100 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Liste{% endblock %}
+{% block title %}Modifier la Liste{% endblock %}
 
-{% block body %}
-    <h1>Edit Liste</h1>
+{% block main_content %}
+<div class="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <!-- Titre principal -->
+    <h1 class="text-3xl font-extrabold text-center mb-8 text-gray-800">📝 Modifier la Liste</h1>
 
-    {{ include('liste/_form.html.twig', {'button_label': 'Update'}) }}
+    <!-- Début du formulaire -->
+    {{ form_start(form) }}
 
-    <a href="{{ path('app_liste_index') }}">back to list</a>
+    <!-- Section Nom de la Liste -->
+    <div class="bg-gray-100 rounded-lg shadow-sm mb-6 p-4">
+        <h3 class="font-bold text-lg mb-4">🛒 Nom de la Liste</h3>
+        {{ form_row(form.nom, {
+            'attr': {'class': 'input input-bordered w-full', 'placeholder': 'Ex: Courses du samedi'}
+        }) }}
+    </div>
 
-    {{ include('liste/_delete_form.html.twig') }}
+    <!-- Section Lignes (Produits et Quantités) -->
+    <div class="bg-gray-100 rounded-lg shadow-sm p-4 mb-6">
+        <h3 class="font-bold text-lg mb-4">📦 Modifier les Produits</h3>
+        <ul id="lignes-list" class="space-y-4" data-prototype="{{ form_widget(form.lignes.vars.prototype)|e('html_attr') }}">
+            {% for ligne in form.lignes %}
+                <li class="ligne-item bg-white shadow-md p-4 rounded-lg flex justify-between items-center animate-fade-in">
+                    <div class="w-3/4">
+                        {{ form_row(ligne.produit, {'label': false, 'attr': {'class': 'input input-bordered w-full', 'placeholder': 'Produit'}}) }}
+                    </div>
+                    <div class="w-1/4">
+                        {{ form_row(ligne.quantite, {'label': false, 'attr': {'class': 'input input-bordered w-full', 'placeholder': 'Quantité'}}) }}
+                    </div>
+                    <button type="button" class="btn btn-error btn-sm ml-4 remove-ligne">🗑️</button>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="button" id="add-ligne-btn" class="btn btn-outline btn-success mt-4">
+            ➕ Ajouter un produit
+        </button>
+    </div>
+
+    <!-- Boutons de soumission -->
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-lg px-8 py-2">
+            💾 Mettre à jour
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+
+    <!-- Bouton Retour et Suppression -->
+    <div class="mt-6 flex justify-between">
+        <a href="{{ path('app_liste_index') }}" class="btn btn-outline btn-secondary">↩️ Retour</a>
+        {{ include('liste/_delete_form.html.twig') }}
+    </div>
+</div>
+
+<!-- Script pour gérer l'ajout et la suppression dynamiques des lignes -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const addButton = document.getElementById('add-ligne-btn');
+        const lignesList = document.getElementById('lignes-list');
+        const prototype = lignesList.dataset.prototype;
+
+        let index = lignesList.childElementCount;
+
+        // Ajouter une nouvelle ligne
+        addButton.addEventListener('click', () => {
+            const newForm = prototype.replace(/__name__/g, index);
+            const newItem = document.createElement('li');
+            newItem.classList.add('ligne-item', 'bg-white', 'shadow-md', 'p-4', 'rounded-lg', 'flex', 'justify-between', 'items-center', 'animate-fade-in');
+            newItem.innerHTML = `
+                <div class="w-3/4">
+                    ${newForm.replace('class="form-control"', 'class="input input-bordered w-full"')}
+                </div>
+
+            `;
+            lignesList.appendChild(newItem);
+            index++;
+        });
+
+        // Supprimer une ligne existante
+        lignesList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-ligne')) {
+                event.target.closest('li').remove();
+            }
+        });
+    });
+</script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out;
+    }
+</style>
 {% endblock %}

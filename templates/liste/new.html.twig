@@ -1,11 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Liste{% endblock %}
+{% block title %}Créer une Liste de Courses{% endblock %}
 
-{% block body %}
-    <h1>Create new Liste</h1>
+{% block main_content %}
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <!-- Titre principal -->
+    <h1 class="text-3xl font-extrabold text-center mb-8 text-gray-800">🛒 Nouvelle Liste de Courses</h1>
 
-    {{ include('liste/_form.html.twig') }}
+    <!-- Début du formulaire -->
+    {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
 
-    <a href="{{ path('app_liste_index') }}">back to list</a>
+    <!-- Section Nom de la Liste -->
+    <div class="bg-gray-100 rounded-lg shadow-sm mb-6">
+        <div class="bg-blue-500 text-white rounded-t-lg p-3">
+            <h3 class="font-bold text-lg">📝 Nom de la Liste</h3>
+        </div>
+        <div class="p-4">
+            {{ form_row(form.nom, {'attr': {'class': 'input input-bordered w-full', 'placeholder': 'Ex: Courses du samedi'}}) }}
+        </div>
+    </div>
+
+    <!-- Section Ajouter des Produits -->
+    <div class="bg-gray-100 rounded-lg shadow-sm mb-6">
+        <div class="bg-green-500 text-white rounded-t-lg p-3">
+            <h3 class="font-bold text-lg">🛍️ Ajouter des Produits</h3>
+        </div>
+        <div class="p-4">
+            <!-- Conteneur pour les lignes ajoutées -->
+            <ul id="lignes-list" class="space-y-4" data-prototype="{{ form_widget(form.lignes.vars.prototype)|e('html_attr') }}">
+                <!-- Ne pas afficher les lignes existantes ici -->
+            </ul>
+
+            <!-- Bouton Ajouter un produit -->
+            <button type="button" id="add-ligne-btn" class="btn btn-outline btn-success mt-4">
+                ➕ Ajouter un produit
+            </button>
+        </div>
+    </div>
+
+    <!-- Bouton Enregistrer -->
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-lg px-8 py-2">
+            📝 Enregistrer la Liste
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+
+<!-- Script pour ajouter dynamiquement des lignes -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const addButton = document.getElementById('add-ligne-btn');
+        const lignesList = document.getElementById('lignes-list');
+        const prototype = lignesList.dataset.prototype;
+
+        let index = 0;
+
+        // Ajouter une nouvelle ligne avec le prototype
+        addButton.addEventListener('click', () => {
+            const newForm = prototype.replace(/__name__/g, index);
+            const newItem = document.createElement('li');
+            newItem.classList.add('bg-white', 'shadow-md', 'p-4', 'rounded-lg', 'flex', 'justify-between', 'items-center', 'animate-fade-in');
+            newItem.innerHTML = `
+                <div class="w-3/4">
+                    ${newForm.replace('class="form-control"', 'class="input input-bordered w-full"')}
+                </div>
+
+                <button type="button" class="btn btn-error btn-sm ml-4 remove-ligne">🗑️</button>
+            `;
+            lignesList.appendChild(newItem);
+            index++;
+        });
+
+        // Supprimer une ligne
+        lignesList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-ligne')) {
+                event.target.closest('li').remove();
+            }
+        });
+    });
+</script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out;
+    }
+</style>
 {% endblock %}

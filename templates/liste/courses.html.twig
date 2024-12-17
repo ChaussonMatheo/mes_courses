@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Courses en Direct{% endblock %}
+
+{% block main_content %}
+<div class="max-w-6xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <h1 class="text-3xl font-extrabold text-center mb-8 text-gray-800">🛒 Courses en Direct</h1>
+
+    <div class="grid grid-cols-2 gap-6">
+        <!-- Colonne des Articles à Acheter -->
+        <div class="bg-gray-100 p-4 rounded-lg shadow-inner">
+            <h2 class="text-xl font-bold mb-4 text-center">📋 Articles</h2>
+            <ul id="articles-list" class="space-y-4">
+                {% for ligne in lignes %}
+                    <li class="p-4 bg-white rounded-lg shadow-md cursor-pointer drag-item"
+                        data-id="{{ ligne.id }}">
+                        <span class="font-bold">{{ ligne.produit.nom }}</span>
+                        <span class="block text-gray-500">Quantité : {{ ligne.quantite }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Colonne des Articles dans le Panier -->
+        <div class="bg-green-100 p-4 rounded-lg shadow-inner">
+            <h2 class="text-xl font-bold mb-4 text-center">🧺 Dans le Panier</h2>
+            <ul id="caddy-list" class="space-y-4">
+                {% for ligne in lignes  %}
+                    {% if ligne.DansLeCaddy %}
+                    <li class="p-4 bg-green-200 rounded-lg shadow-md cursor-pointer drag-item"
+                        data-id="{{ ligne.id }}">
+                        <span class="font-bold">{{ ligne.produit.nom }}</span>
+                        <span class="block text-gray-600">Quantité : {{ ligne.quantite }}</span>
+                    </li>
+                     {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Script Interact.js -->
+<script src="https://cdn.jsdelivr.net/npm/@interactjs/interactjs/index.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const articlesList = document.getElementById('articles-list');
+    const caddyList = document.getElementById('caddy-list');
+
+    interact('.drag-item').draggable({
+        listeners: {
+            start(event) {
+                console.log('Drag started', event.target);
+            },
+            move(event) {
+                const target = event.target;
+                target.style.transform = `translate(${event.dx}px, ${event.dy}px)`;
+            },
+            end(event) {
+                const target = event.target;
+                target.style.transform = 'translate(0, 0)';
+            }
+        }
+    });
+
+    interact('#articles-list, #caddy-list').dropzone({
+        accept: '.drag-item',
+        ondrop(event) {
+            const item = event.relatedTarget;
+            const targetList = event.target;
+
+            // Déplacer l'élément
+            targetList.appendChild(item);
+
+            // Déterminer si l'article est dans le panier
+            const inCaddy = targetList.id === 'caddy-list';
+            updateCaddyStatus(item.dataset.id, inCaddy);
+        }
+    });
+
+    async function updateCaddyStatus(ligneId, inCaddy) {
+        try {
+            const response = await fetch(`/liste/${ligneId}/update-caddy`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ dansLeCaddy: inCaddy })
+            });
+
+            if (!response.ok) {
+                alert('Une erreur est survenue.');
+            }
+        } catch (error) {
+            console.error('Erreur réseau :', error);
+        }
+    }
+});
+</script>
+{% endblock %}

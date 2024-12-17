@@ -1,13 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Produit{% endblock %}
+{% block title %}Modifier Produit{% endblock %}
 
 {% block main_content %}
-    <h1>Modifier Produit ⚙️</h1>
+<div class="max-w-3xl mx-auto mt-10 p-8 bg-white shadow-xl rounded-lg">
+    <!-- Titre principal -->
+    <h1 class="text-3xl font-extrabold text-center mb-8 text-gray-800">⚙️ Modifier le Produit</h1>
 
-    {{ include('produit/_form.html.twig', {'button_label': 'Update'}) }}
+    <!-- Formulaire d'édition -->
+    <form method="post" class="space-y-6">
+        <!-- Champ Nom -->
+        <div>
+            <label for="produit_nom" class="block text-gray-700 font-semibold mb-2">Nom du Produit</label>
+            <input type="text" id="produit_nom" name="produit[nom]" value="{{ produit.nom ?? '' }}"
+                   class="input input-bordered w-full focus:ring-2 focus:ring-blue-400"
+                   placeholder="Ex: Pommes Golden">
+        </div>
 
-    <a href="{{ path('app_produit_index') }}">Retour à la liste ↩️</a>
+        <!-- Champ Marque -->
+        <div>
+            <label for="produit_marque" class="block text-gray-700 font-semibold mb-2">Marque</label>
+            <input type="text" id="produit_marque" name="produit[marque]" value="{{ produit.marque ?? '' }}"
+                   class="input input-bordered w-full focus:ring-2 focus:ring-blue-400"
+                   placeholder="Ex: Bio Village">
+        </div>
 
-    {{ include('produit/_delete_form.html.twig') }}
+        <!-- Champ Quantité -->
+        <div>
+            <label for="produit_quantite" class="block text-gray-700 font-semibold mb-2">Quantité</label>
+            <input type="number" id="produit_quantite" name="produit[quantite]" value="{{ produit.quantite ?? '' }}"
+                   class="input input-bordered w-full focus:ring-2 focus:ring-blue-400"
+                   placeholder="Ex: 5">
+        </div>
+
+        <!-- Champ Commentaires -->
+        <div>
+            <label for="produit_commentaires" class="block text-gray-700 font-semibold mb-2">Commentaires</label>
+            <textarea id="produit_commentaires" name="produit[commentaires]" rows="3"
+                      class="textarea textarea-bordered w-full focus:ring-2 focus:ring-blue-400"
+                      placeholder="Ajoutez des détails sur le produit">{{ produit.commentaires ?? '' }}</textarea>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="flex justify-between items-center mt-6">
+            <!-- Bouton Retour -->
+            <a href="{{ path('app_produit_index') }}" class="btn btn-outline btn-secondary">
+                ↩️ Retour à la liste
+            </a>
+
+            <!-- Bouton Soumettre -->
+            <button type="submit" class="btn btn-primary px-6 py-2">
+                💾 Mettre à jour
+            </button>
+        </div>
+    </form>
+
+    <!-- Formulaire de suppression -->
+    <div class="mt-8 text-center">
+        {{ include('produit/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

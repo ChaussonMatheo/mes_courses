@@ -1,59 +1,70 @@
 {% extends 'base.html.twig' %}
+
 {% block title %}Produits{% endblock %}
-{% block stylesheets %}
- <style>
- .table td.fit,
- .table th.fit {
- white-space: nowrap;
- width: 1%;
- }
- </style>
-{% endblock %}
+
 {% block main_content %}
- <h1>🛒 Liste des Produits</h1>
- <p class="my-4">
- <a class="btn btn-sm btn-primary" href="{{ path('app_produit_new') }}"
- title="Nouveau produit"><i class="bi bi-plus-lg me-1"></i>Nouveau Produit 📃</a>
- </p>
- <table class="table">
- <thead>
- <tr>
- <th class="text-center">Zone</th>
- <th>Nom</th>
-<th class="text-center fit">Actions</th>
- </tr>
- </thead>
- <tbody>
- {% for produit in produits %}
- <tr>
- <td class="text-center fit text-primary">
- {% if produit.zone %}{{ produit.zone.nom }}{% endif %}
- </td>
-<td>
- <h5>
- {{ produit.nom }}
-{% if produit.marque %}<em>({{ produit.marque }})</em>{% endif %}
- {% if produit.quantite %}
- <small class="text-info"> - {{ produit.quantite }}</small>
- {% endif %}
- </h5>
-{% if produit.commentaires %}
- <small class="text-muted">{{ produit.commentaires }}</small>
- {% endif %}
- </td>
-<td class="text-center fit">
- <a class="btn btn-link fs-5 p-0 mx-3" title="Editer le produit"
- href="{{ path('app_produit_edit', {'id': produit.id}) }}">
- <i class="bi bi-pencil-square"></i>
- </a>
- {{ include('produit/_delete_form.html.twig') }}
- </td>
- </tr>
- {% else %}
- <tr>
- <td colspan="3">Aucun produit enregistré</td>
- </tr>
- {% endfor %}
- </tbody>
- </table>
+<div class="container mx-auto mt-6">
+    <h1 class="text-3xl font-bold text-center mb-6">🛒 Liste des Produits</h1>
+
+    <!-- Bouton pour ajouter un nouveau produit -->
+    <div class="text-right mb-4">
+        <a href="{{ path('app_produit_new') }}" class="btn btn-primary">
+            ➕ Nouveau Produit 📃
+        </a>
+    </div>
+
+    <!-- Tableau des produits -->
+    <div class="overflow-x-auto shadow-lg rounded-lg">
+        <table class="table w-full border-collapse">
+            <thead class="bg-gray-200 text-gray-800">
+                <tr>
+                    <th class="text-center py-2 px-4">Zone</th>
+                    <th class="py-2 px-4">Nom</th>
+                    <th class="text-center py-2 px-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produit in produits %}
+                    <tr class="hover:bg-gray-50">
+                        <!-- Zone -->
+                        <td class="text-center text-primary font-semibold py-2 px-4">
+                            {% if produit.zone %}{{ produit.zone.nom }}{% else %}-{% endif %}
+                        </td>
+
+                        <!-- Nom et détails -->
+                        <td class="py-2 px-4">
+                            <h5 class="font-bold text-lg">
+                                {{ produit.nom }}
+                                {% if produit.marque %}
+                                    <em class="text-gray-500">({{ produit.marque }})</em>
+                                {% endif %}
+                                {% if produit.quantite %}
+                                    <span class="text-sm text-blue-500"> - {{ produit.quantite }}</span>
+                                {% endif %}
+                            </h5>
+                            {% if produit.commentaires %}
+                                <p class="text-sm text-gray-500">{{ produit.commentaires }}</p>
+                            {% endif %}
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="text-center py-2 px-4">
+                            <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" 
+                               class="btn btn-sm btn-outline-success mx-1" title="Éditer">
+                                ✏️
+                            </a>
+                            {{ include('produit/_delete_form.html.twig') }}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4 text-gray-500">
+                            Aucun produit enregistré.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,20 @@
+{
+  "name": "mes_courses-master",
+  "version": "1.0.0",
+  "description": "TP Symfony BTS CIEL -> Liste de course dynamique. -> Ordre de passage des articles dans le magasin",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "daisyui": "^4.12.22",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16"
+  }
+}

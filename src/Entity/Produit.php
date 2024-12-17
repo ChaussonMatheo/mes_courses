@@ -31,12 +31,13 @@ class Produit
     #[ORM\JoinColumn(nullable: true)]
     private ?Zone $zone = null;
 
-    #[ORM\ManyToMany(targetEntity: ArticlesListes::class, mappedBy: 'Produit')]
-    private Collection $articlesListes;
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Ligne::class)]
+    private Collection $lignes;
 
     public function __construct()
     {
         $this->articlesListes = new ArrayCollection();
+        $this->lignes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,28 +105,29 @@ class Produit
         return $this;
     }
 
-    /**
-     * @return Collection<int, ArticlesListes>
-     */
-    public function getArticlesListes(): Collection
+
+    public function getLignes(): Collection
     {
-        return $this->articlesListes;
+        return $this->lignes;
     }
 
-    public function addArticlesListe(ArticlesListes $articlesListe): static
+    public function addLigne(Ligne $ligne): static
     {
-        if (!$this->articlesListes->contains($articlesListe)) {
-            $this->articlesListes->add($articlesListe);
-            $articlesListe->addProduit($this);
+        if (!$this->lignes->contains($ligne)) {
+            $this->lignes->add($ligne);
+            $ligne->setProduit($this);
         }
 
         return $this;
     }
 
-    public function removeArticlesListe(ArticlesListes $articlesListe): static
+    public function removeLigne(Ligne $ligne): static
     {
-        if ($this->articlesListes->removeElement($articlesListe)) {
-            $articlesListe->removeProduit($this);
+        if ($this->lignes->removeElement($ligne)) {
+            // set the owning side to null (unless already changed)
+            if ($ligne->getProduit() === $this) {
+                $ligne->setProduit(null);
+            }
         }
 
         return $this;

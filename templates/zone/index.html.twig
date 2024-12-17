@@ -1,32 +1,51 @@
 {% extends 'base.html.twig' %}
-{% block title %} Zone {% endblock %}
+{% block title %}📍 Gestion des Zones{% endblock %}
 
 {% block main_content %}
-    <div class="container">
-        <p class="my-4">
-        <a class="btn btn-sm btn-primary" href="{{ path('zone_create') }}"
-        title="Nouvelle Zone"><i class="bi bi-plus-lg me-1"></i>Nouvelle Zone</a>
-        </p>
+<div class="max-w-5xl mx-auto mt-8 p-6 bg-white shadow-lg rounded-lg">
+    <!-- Titre principal -->
+    <h1 class="text-3xl font-extrabold text-center mb-6 text-gray-800">
+        📍 Liste des Zones 🗂️
+    </h1>
 
-        <table class="table table-bordered table-striped">
-            <thead class="bg-dark text-white">
+    <!-- Bouton "Nouvelle Zone" -->
+    <div class="flex justify-end mb-4">
+        <a href="{{ path('zone_create') }}" 
+           class="btn btn-primary flex items-center space-x-2">
+            <i class="bi bi-plus-lg"></i>
+            <span>➕ Nouvelle Zone</span>
+        </a>
+    </div>
+
+    <!-- Tableau des zones -->
+    <div class="overflow-x-auto">
+        <table class="table w-full border-collapse border">
+            <thead class="bg-gray-800 text-white">
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nom</th>
-                    <th class="text-center" scope="col">Position</th>
+                    <th class="py-3 px-4 text-left">🔢 ID</th>
+                    <th class="py-3 px-4 text-left">🏷️ Nom</th>
+                    <th class="py-3 px-4 text-center">📊 Position</th>
                 </tr>
             </thead>
             <tbody>
-            {% for zone in zones %}
-            <tr>
-                <th scope="row">{{ zone.id }}</th>
-                <th>{{ zone.nom }}</th>
-                <td class="text-center">{{ zone.position }}</td>
-            </tr>
-            {% endfor %}
+                {% for zone in zones %}
+                <tr class="hover:bg-gray-100">
+                    <!-- ID -->
+                    <td class="py-2 px-4 border-b text-gray-700">{{ zone.id }}</td>
+                    <!-- Nom -->
+                    <td class="py-2 px-4 border-b text-gray-700">{{ zone.nom }}</td>
+                    <!-- Position -->
+                    <td class="py-2 px-4 text-center border-b text-gray-700">{{ zone.position }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="py-4 text-center text-gray-500">
+                        ❌ Aucune zone enregistrée.
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
-
-
+</div>
 {% endblock %}

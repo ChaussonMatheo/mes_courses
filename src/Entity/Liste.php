@@ -18,15 +18,16 @@ class Liste
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $notes = null;
+    #[ORM\Column]
+    private ?\DateTime $createdAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'id_liste', targetEntity: ArticlesListes::class)]
-    private Collection $articlesListes;
+    #[ORM\OneToMany(mappedBy: 'liste', targetEntity: Ligne::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $lignes;
 
     public function __construct()
     {
-        $this->articlesListes = new ArrayCollection();
+        $this->lignes = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -38,50 +39,47 @@ class Liste
     {
         return $this->nom;
     }
-
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
-        $this->nom = $nom;
+    $this->nom = $nom;
 
+    return $this;
+    }
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt ?? new \DateTime(); // Retourne une nouvelle date si null
+    }
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = new \DateTime();
         return $this;
     }
 
-    public function getNotes(): ?string
-    {
-        return $this->notes;
-    }
-
-    public function setNotes(?string $notes): static
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
 
     /**
-     * @return Collection<int, ArticlesListes>
+     * @return Collection<int, Ligne>
      */
-    public function getArticlesListes(): Collection
+    public function getLignes(): Collection
     {
-        return $this->articlesListes;
+        return $this->lignes;
     }
 
-    public function addArticlesListe(ArticlesListes $articlesListe): static
+    public function addLigne(Ligne $ligne): static
     {
-        if (!$this->articlesListes->contains($articlesListe)) {
-            $this->articlesListes->add($articlesListe);
-            $articlesListe->setIdListe($this);
+        if (!$this->lignes->contains($ligne)) {
+            $this->lignes->add($ligne);
+            $ligne->setListe($this);
         }
 
         return $this;
     }
 
-    public function removeArticlesListe(ArticlesListes $articlesListe): static
+    public function removeLigne(Ligne $ligne): static
     {
-        if ($this->articlesListes->removeElement($articlesListe)) {
+        if ($this->lignes->removeElement($ligne)) {
             // set the owning side to null (unless already changed)
-            if ($articlesListe->getIdListe() === $this) {
-                $articlesListe->setIdListe(null);
+            if ($ligne->getListe() === $this) {
+                $ligne->setListe(null);
             }
         }
 

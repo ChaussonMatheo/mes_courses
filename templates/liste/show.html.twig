@@ -1,30 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste{% endblock %}
+{% block title %}Liste de Courses{% endblock %}
 
-{% block body %}
-    <h1>Liste</h1>
+{% block main_content %}
+<div class="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <h1 class="text-3xl font-extrabold text-center mb-8 text-gray-800">🛒 Liste de Courses</h1>
 
-    <table class="table">
+    <!-- Tableau des articles triés par zone -->
+    <table class="table w-full border-collapse border">
+        <thead class="bg-gray-800 text-white">
+            <tr>
+                <th class="py-3 px-4 text-left">Zone</th>
+                <th class="py-3 px-4 text-left">Produit</th>
+                <th class="py-3 px-4 text-center">Quantité</th>
+                <th class="py-3 px-4 text-center">Dans le Panier</th>
+            </tr>
+        </thead>
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ liste.id }}</td>
+            {% for ligne in lignes %}
+            <tr class="hover:bg-gray-50">
+                <!-- Zone -->
+                <td class="py-2 px-4 border-b">{{ ligne.produit.zone.nom }}</td>
+
+                <!-- Produit -->
+                <td class="py-2 px-4 border-b">{{ ligne.produit.nom }}</td>
+
+                <!-- Quantité -->
+                <td class="py-2 px-4 text-center border-b">{{ ligne.quantite }}</td>
+
+                <!-- Statut Dans le Panier -->
+                <td class="py-2 px-4 text-center border-b">
+                    {% if ligne.dansLeCaddy %}
+                        ✅ Oui
+                    {% else %}
+                        ❌ Non
+                    {% endif %}
+                </td>
             </tr>
+            {% else %}
             <tr>
-                <th>Nom</th>
-                <td>{{ liste.nom }}</td>
+                <td colspan="4" class="text-center py-4 text-gray-500">Aucun article dans cette liste.</td>
             </tr>
-            <tr>
-                <th>Notes</th>
-                <td>{{ liste.notes }}</td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_liste_index') }}">back to list</a>
-
-    <a href="{{ path('app_liste_edit', {'id': liste.id}) }}">edit</a>
-
-    {{ include('liste/_delete_form.html.twig') }}
+    <!-- Bouton Retour -->
+    <div class="mt-6 text-center">
+        <a href="{{ path('app_liste_index') }}" class="btn btn-outline btn-secondary">
+            ↩️ Retour à la liste
+        </a>
+    </div>
+</div>
 {% endblock %}

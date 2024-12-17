@@ -1,17 +1,38 @@
 {% extends 'base.html.twig' %}
-{% block title %} Zone | NEW {% endblock %}
-{% block main_content %}
-<div class="container mt-5">
-  <h1>Nouvelle Zone</h1>
-  {{ form_start(form) }}
-  <div class="mb-3">
-    {{ form_widget(form) }}
-  </div>
-  <button type="submit" class="btn btn-lg btn-primary">
-    {{ button_label|default('Enregistrer') }}
-  </button>
-  <a href="{{ path('zone_index') }}" class="btn btn-outline-secondary">Annuler</a>
-  {{ form_end(form) }}
-</div>
+{% block title %}Zone | Nouvelle Zone{% endblock %}
 
+{% block main_content %}
+<div class="max-w-2xl mx-auto mt-10 p-8 bg-white shadow-xl rounded-lg">
+    <!-- Titre principal -->
+    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">📍 Nouvelle Zone</h1>
+
+    <!-- Formulaire de création -->
+    {{ form_start(form, {'attr': {'class': 'space-y-4'}}) }}
+    
+    <!-- Champs du formulaire -->
+    <div class="space-y-4">
+        {{ form_row(form.nom, {
+            'label': '🏷️ Nom de la Zone',
+            'attr': {'class': 'input input-bordered w-full focus:ring-2 focus:ring-blue-400'}
+        }) }}
+        
+        {{ form_row(form.position, {
+            'label': '📊 Position',
+            'attr': {'class': 'input input-bordered w-full focus:ring-2 focus:ring-blue-400'}
+        }) }}
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="flex justify-between items-center mt-6">
+        <!-- Bouton Annuler -->
+        <a href="{{ path('zone_index') }}" class="btn btn-outline btn-secondary">
+            ❌ Annuler
+        </a>
+        <!-- Bouton Soumettre -->
+        <button type="submit" class="btn btn-primary px-6 py-2">
+            ✅ Enregistrer
+        </button>
+    </div>
+    {{ form_end(form) }}
+</div>
 {% endblock %}

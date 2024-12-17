@@ -1,37 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste index{% endblock %}
+{% block title %}📋 Liste des Listes{% endblock %}
 
-{% block body %}
-    <h1>Liste index</h1>
+{% block main_content %}
+<div class="max-w-6xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
+    <!-- Titre principal -->
+    <h1 class="text-3xl font-extrabold text-center mb-6 text-gray-800">📋 Liste des Listes 🗂️</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Notes</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for liste in listes %}
-            <tr>
-                <td>{{ liste.id }}</td>
-                <td>{{ liste.nom }}</td>
-                <td>{{ liste.notes }}</td>
-                <td>
-                    <a href="{{ path('app_liste_show', {'id': liste.id}) }}">show</a>
-                    <a href="{{ path('app_liste_edit', {'id': liste.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <!-- Bouton "Créer une nouvelle liste" -->
+    <div class="flex justify-end mb-4">
+        <a href="{{ path('app_liste_new') }}" class="btn btn-primary flex items-center space-x-2">
+            <i class="bi bi-plus-lg"></i>
+            <span>➕ Créer une Nouvelle Liste</span>
+        </a>
+    </div>
 
-    <a href="{{ path('app_liste_new') }}">Create new</a>
+    <!-- Tableau des listes -->
+    <div class="overflow-x-auto">
+        <table class="table w-full border-collapse border">
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left">🆔 ID</th>
+                    <th class="py-3 px-4 text-left">🏷️ Nom</th>
+                    <th class="py-3 px-4 text-center">🗓️ Date de Création</th>
+                    <th class="py-3 px-4 text-center">⚙️ Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for liste in listes %}
+                <tr class="hover:bg-gray-50">
+                    <!-- ID -->
+                    <td class="py-2 px-4 border-b">{{ liste.id }}</td>
+                    <!-- Nom -->
+                    <td class="py-2 px-4 border-b">{{ liste.nom }}</td>
+                    <!-- Date de création -->
+                    <td class="py-2 px-4 text-center border-b">{{ liste.createdAt|date('d/m/Y') }}</td>
+                    <!-- Actions -->
+                    <td class="py-2 px-4 text-center border-b">
+                        <a href="{{ path('app_liste_show', {'id': liste.id}) }}" 
+                           class="btn btn-outline btn-success btn-sm mx-1" title="Voir">
+                            👁️ Voir
+                        </a>
+                        <a href="{{ path('app_liste_edit', {'id': liste.id}) }}" 
+                           class="btn btn-outline btn-info btn-sm mx-1" title="Modifier">
+                            ✏️ Modifier
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="py-4 text-center text-gray-500">
+                        ❌ Aucune liste trouvée.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
