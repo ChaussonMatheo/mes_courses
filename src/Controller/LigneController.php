@@ -8,6 +8,7 @@ use App\Form\LigneType;
 use App\Repository\LigneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,8 +35,15 @@ class LigneController extends AbstractController
             $entityManager->persist($ligne);
             $entityManager->flush();
 
+
             return $this->redirectToRoute('app_ligne_index', [], Response::HTTP_SEE_OTHER);
         }
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($form->getData()); // Vérifie ce qui est envoyé
+            dump($ligne->getProduit()); // Vérifie si le produit est défini
+            exit();
+        }
+
 
         return $this->renderForm('ligne/new.html.twig', [
             'ligne' => $ligne,
@@ -89,4 +97,16 @@ class LigneController extends AbstractController
 
         return $this->redirectToRoute('app_ligne_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/{id}/toggle-caddy', name: 'app_ligne_toggle_caddy', methods: ['POST'])]
+    public function toggleDansLeCaddy(Ligne $ligne, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $ligne->setDansLeCaddy(!$ligne->isDansLeCaddy());
+        $entityManager->flush();
+
+        return new JsonResponse([
+            'success' => true,
+            'dansLeCaddy' => $ligne->isDansLeCaddy(),
+        ]);
+    }
+
 }

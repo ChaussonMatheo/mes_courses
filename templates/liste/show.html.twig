@@ -18,23 +18,28 @@
         </thead>
         <tbody>
             {% for ligne in lignes %}
+                <script></script>
             <tr class="hover:bg-gray-50">
                 <!-- Zone -->
-                <td class="py-2 px-4 border-b">{{ ligne.produit.zone.nom }}</td>
+                <td class="py-2 px-4 border-b">{{ ligne.Produit.zone.nom }}</td>
 
                 <!-- Produit -->
-                <td class="py-2 px-4 border-b">{{ ligne.produit.nom }}</td>
+                <td class="py-2 px-4 border-b">{{ ligne.Produit.nom }}</td>
 
                 <!-- Quantité -->
                 <td class="py-2 px-4 text-center border-b">{{ ligne.quantite }}</td>
 
                 <!-- Statut Dans le Panier -->
                 <td class="py-2 px-4 text-center border-b">
-                    {% if ligne.dansLeCaddy %}
-                        ✅ Oui
-                    {% else %}
-                        ❌ Non
-                    {% endif %}
+                    <button
+                            class="toggle-caddy px-2 py-1 text-white rounded {{ ligne.dansLeCaddy ? 'bg-green-500' : 'bg-red-500' }}"
+                            data-id="{{ ligne.id }}">
+                        {% if ligne.dansLeCaddy %}
+                            ✅ Oui
+                        {% else %}
+                            ❌ Non
+                        {% endif %}
+                    </button>
                 </td>
             </tr>
             {% else %}
@@ -52,4 +57,35 @@
         </a>
     </div>
 </div>
+
+
+<script>
+    document.querySelectorAll('.toggle-caddy').forEach(button => {
+        button.addEventListener('click', async () => {
+            const ligneId = button.getAttribute('data-id');
+            const response = await fetch(`/ligne/${ligneId}/toggle-caddy`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    // Met à jour l'état du bouton
+                    button.classList.toggle('bg-green-500', data.dansLeCaddy);
+                    button.classList.toggle('bg-red-500', !data.dansLeCaddy);
+                    button.textContent = data.dansLeCaddy ? '✅ Oui' : '❌ Non';
+                }
+            } else {
+                alert("Erreur lors de la mise à jour de l'état.");
+            }
+        });
+    });
+</script>
+
 {% endblock %}
+
+

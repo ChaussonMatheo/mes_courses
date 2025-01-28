@@ -27,11 +27,11 @@ class Produit
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $commentaires = null;
 
-    #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'produits')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'Produit')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Zone $zone = null;
 
-    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Ligne::class)]
+    #[ORM\OneToMany(mappedBy: 'Produit', targetEntity: Ligne::class)]
     private Collection $lignes;
 
     public function __construct()

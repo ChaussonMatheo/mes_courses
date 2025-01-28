@@ -13,8 +13,9 @@ class Ligne
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'lignes')]
-    private ?produit $produit = null;
+    #[ORM\ManyToOne(targetEntity: Produit::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Produit $produit = null;
 
     #[ORM\Column]
     private ?bool $DansLeCaddy = false;
@@ -30,17 +31,18 @@ class Ligne
         return $this->id;
     }
 
-    public function getProduit(): ?produit
+    public function getProduit(): ?Produit
     {
         return $this->produit;
     }
 
-    public function setProduit(?produit $produit): static
+    public function setProduit(?Produit $produit): static
     {
         $this->produit = $produit;
 
         return $this;
     }
+
 
     public function isDansLeCaddy(): ?bool
     {

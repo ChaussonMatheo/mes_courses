@@ -20,7 +20,8 @@ class LigneType extends AbstractType
             ->add('produit', EntityType::class, [
                 'class' => Produit::class,
                 'choice_label' => 'nom',
-                'label' => 'Produit'
+                'label' => 'Produit',
+                'required' => true,
             ])
             ->add('quantite', IntegerType::class, [
                 'label' => 'Quantité',

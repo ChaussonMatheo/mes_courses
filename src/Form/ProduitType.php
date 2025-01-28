@@ -31,7 +31,7 @@ class ProduitType extends AbstractType
             ->add('commentaires', TextareaType::class, [
                 'required' => false,
             ])
-            ->add('Zone', EntityType::class, [
+            ->add('zone', EntityType::class, [
                 'label' => "Position dans le magasin",
                 'class' => Zone::class,
                 'choice_label' => 'nom',
@@ -44,6 +44,9 @@ class ProduitType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Produit::class,
+            'csrf_protection' => true, // Doit être à true (par défaut)
+            'csrf_field_name' => '_token', // Nom du champ (par défaut)
+            'csrf_token_id' => 'produit', // Identifiant unique pour le formulaire
         ]);
     }
 }
